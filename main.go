@@ -1,6 +1,7 @@
 package main
 
 import (
+
 	"log"
 	"url-shortener/config"
 	"url-shortener/routes"
@@ -18,6 +19,7 @@ func init() {
 }
 
 func main() {
+
 
 	config.ConnectDatabase()
 

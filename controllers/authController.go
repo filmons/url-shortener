@@ -127,6 +127,17 @@ type Claims struct {
     jwt.StandardClaims
 }
 
+// Register godoc
+// @Summary Register new user
+// @Description Register a new user with email and password
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param user body models.User true "User registration data"
+// @Success 200 {object} map[string]interface{} "message: User registered successfully"
+// @Failure 400 {object} map[string]interface{} "error: error message"
+// @Failure 500 {object} map[string]interface{} "error: error message"
+// @Router /register [post]
 func Register(c *gin.Context) {
     var user models.User
     if err := c.ShouldBindJSON(&user); err != nil {
@@ -153,6 +164,18 @@ func Register(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"message": "User registered successfully"})
 }
 
+// Login godoc
+// @Summary User login
+// @Description Logs in a user and returns a JWT token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param credentials body struct { Email string `json:"email"`; Password string `json:"password"` } true "Login Credentials"
+// @Success 200 {object} map[string]interface{} "token: JWT token"
+// @Failure 400 {object} map[string]interface{} "error: error message"
+// @Failure 401 {object} map[string]interface{} "error: Invalid email or password"
+// @Failure 500 {object} map[string]interface{} "error: error message"
+// @Router /login [post]
 func Login(c *gin.Context) {
     var input struct {
         Email    string `json:"email"`

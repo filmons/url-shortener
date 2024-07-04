@@ -1,11 +1,11 @@
 package controllers
 
 import (
-    "net/http"
-    "url-shortener/config"
-    "url-shortener/models"
-    "github.com/gin-gonic/gin"
-    "github.com/teris-io/shortid"
+	"github.com/gin-gonic/gin"
+	"github.com/teris-io/shortid"
+	"net/http"
+	"url-shortener/config"
+	"url-shortener/models"
 )
 
 // CreateShortURL godoc
@@ -22,33 +22,33 @@ import (
 // @Failure 500 {object} map[string]interface{} "error: error message"
 // @Router /shorten [post]
 func CreateShortURL(c *gin.Context) {
-    var input models.URL
-    if err := c.ShouldBindJSON(&input); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
+	var input models.URL
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-    userID, exists := c.Get("userID")
-    if !exists {
-        c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-        return
-    }
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
 
-    // Générer une URL courte unique
-    shortURL, err := shortid.Generate()
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate short URL"})
-        return
-    }
-    input.ShortURL = shortURL
-    input.UserID = userID.(uint)
+	// Générer une URL courte unique
+	shortURL, err := shortid.Generate()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate short URL"})
+		return
+	}
+	input.ShortURL = shortURL
+	input.UserID = userID.(uint)
 
-    if err := config.DB.Create(&input).Error; err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not save URL"})
-        return
-    }
+	if err := config.DB.Create(&input).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not save URL"})
+		return
+	}
 
-    c.JSON(http.StatusOK, gin.H{"data": input})
+	c.JSON(http.StatusOK, gin.H{"data": input})
 }
 
 func RedirectURL(c *gin.Context) {
@@ -76,4 +76,40 @@ func GetUserURLs(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": urls})
+}
+
+// DeleteUrlById godoc
+// @Summary Delete a URL by ID
+// @Description Deletes a URL by ID
+// @Tags URL Management
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path int true "URL ID"
+// @Success 200 {object} map[string]interface{} "Successfully deleted URL"
+// @Failure 400 {object} map[string]interface{} "error: error message"
+// @Failure 401 {object} map[string]interface{} "error: Unauthorized"
+// @Failure 404 {object} map[string]interface{} "error: URL not found"
+// @Failure 500 {object} map[string]interface{} "error: error message"
+// @Router /del/{id} [delete]
+func DeleteURL(c *gin.Context) {
+	var url models.URL
+	urlID := c.Param("id")
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	if err := config.DB.Where("id = ? AND user_id = ?", urlID, userID).First(&url).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "URL not found"})
+		return
+	}
+
+	if err := config.DB.Delete(&url).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error deleting URL"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": "URL deleted"})
 }

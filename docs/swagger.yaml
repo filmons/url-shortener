@@ -1,9 +1,126 @@
+basePath: /
 definitions:
-  models.User:
+  controllers.loginInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
     type: object
+  models.URL:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      long_url:
+        type: string
+      short_url:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      updated_at:
+        type: string
+      urls:
+        items:
+          $ref: '#/definitions/models.URL'
+        type: array
+    type: object
+host: localhost:8080
 info:
-  contact: {}
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for a URL shortener.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: URL Shortener API
+  version: "1.0"
 paths:
+  /{short_url}:
+    get:
+      description: Redirects to the original URL based on the short URL provided
+      parameters:
+      - description: Short URL
+        in: path
+        name: short_url
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "302":
+          description: Location" "Redirect location to the original URL
+          schema:
+            type: header
+        "404":
+          description: 'error: URL not found'
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Redirect to long URL
+      tags:
+      - Redirect
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in a user and returns a JWT token
+      parameters:
+      - description: Login Credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.loginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'token: JWT token'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 'error: error message'
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: 'error: Invalid email or password'
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 'error: error message'
+          schema:
+            additionalProperties: true
+            type: object
+      summary: User login
+      tags:
+      - auth
   /register:
     post:
       consumes:
@@ -37,4 +154,77 @@ paths:
       summary: Register new user
       tags:
       - auth
+  /shorten:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new short URL for the authenticated user
+      parameters:
+      - description: URL Data
+        in: body
+        name: url
+        required: true
+        schema:
+          $ref: '#/definitions/models.URL'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created short URL
+          schema:
+            $ref: '#/definitions/models.URL'
+        "400":
+          description: 'error: error message'
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: 'error: Unauthorized'
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 'error: error message'
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Create a short URL
+      tags:
+      - URL Management
+  /urls:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves all URLs created by the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of URLs
+          schema:
+            items:
+              $ref: '#/definitions/models.URL'
+            type: array
+        "401":
+          description: 'error: Unauthorized'
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 'error: Error retrieving URLs'
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get user URLs
+      tags:
+      - URL Management
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

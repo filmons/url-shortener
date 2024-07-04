@@ -1,20 +1,13 @@
-// package models
-
-// import "gorm.io/gorm"
-
-// type URL struct {
-//     gorm.Model
-//     LongURL  string `json:"long_url"`
-//     ShortURL string `json:"short_url" gorm:"unique"`
-// }
 package models
 
-import "gorm.io/gorm"
+import "time"
 
 type URL struct {
-    gorm.Model
-    LongURL  string `json:"long_url"`
-    ShortURL string `json:"short_url" gorm:"unique"`
-    UserID   uint   `json:"user_id"`
+    ID            uint      `gorm:"primaryKey" json:"id"`
+    CreatedAt     time.Time `json:"created_at"`
+    UpdatedAt     time.Time `json:"updated_at"`
+    DeletedAt     *time.Time `json:"deleted_at,omitempty"`
+    LongURL       string    `json:"long_url"`
+    ShortURL      string    `json:"short_url" gorm:"unique"`
+    UserID        uint      `json:"user_id"`
 }
-

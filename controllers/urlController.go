@@ -18,7 +18,7 @@ import (
 // @Param url body models.URL true "URL Data"
 // @Success 200 {object} models.URL "Successfully created short URL"
 // @Failure 400 {object} map[string]interface{} "error: error message"
-// @Failure 401 {object} map[string]interface{} "error: Unauthorized"
+// @Failure 401 {object} map[string.interface{} "error: Unauthorized"
 // @Failure 500 {object} map[string]interface{} "error: error message"
 // @Router /shorten [post]
 func CreateShortURL(c *gin.Context) {
@@ -51,6 +51,15 @@ func CreateShortURL(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"data": input})
 }
 
+// RedirectURL godoc
+// @Summary Redirect to long URL
+// @Description Redirects to the original URL based on the short URL provided
+// @Tags Redirect
+// @Produce json
+// @Param short_url path string true "Short URL"
+// @Success 302 {header} string "Location" "Redirect location to the original URL"
+// @Failure 404 {object} map[string]interface{} "error: URL not found"
+// @Router /{short_url} [get]
 func RedirectURL(c *gin.Context) {
 	var url models.URL
 	shortURL := c.Param("short_url")
@@ -62,6 +71,17 @@ func RedirectURL(c *gin.Context) {
 	c.Redirect(http.StatusMovedPermanently, url.LongURL)
 }
 
+// GetUserURLs godoc
+// @Summary Get user URLs
+// @Description Retrieves all URLs created by the authenticated user
+// @Tags URL Management
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {array} models.URL "List of URLs"
+// @Failure 401 {object} map[string]interface{} "error: Unauthorized"
+// @Failure 500 {object} map[string]interface{} "error: Error retrieving URLs"
+// @Router /urls [get]
 func GetUserURLs(c *gin.Context) {
 	userID, exists := c.Get("userID")
 	if !exists {

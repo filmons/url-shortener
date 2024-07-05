@@ -11,4 +11,6 @@ type URL struct {
     LongURL       string    `json:"long_url"`
     ShortURL      string    `json:"short_url" gorm:"unique"`
     UserID        uint      `json:"user_id"`
+    Clicks         int        `json:"clicks" gorm:"default:0"`
+	LastAccessedAt *time.Time `json:"last_accessed_at"`
 }

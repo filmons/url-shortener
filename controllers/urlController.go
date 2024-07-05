@@ -73,13 +73,12 @@ func RedirectURL(c *gin.Context) {
 		return
 	}
 
-	// Mettre à jour LastAccessedAt et incrémenter Clicks
 	now := time.Now()
 	if err := config.DB.Model(&url).Updates(map[string]interface{}{
 		"last_accessed_at": &now,
 		"clicks":           gorm.Expr("clicks + ?", 1),
 	}).Error; err != nil {
-		// Log l'erreur mais continuer la redirection
+		// Log l'erreur mais continue la redirection
 		log.Printf("Error updating URL stats: %v", err)
 	}
 

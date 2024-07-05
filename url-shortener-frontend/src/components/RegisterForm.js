@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Button, Box, Typography} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:8080/register', { name, email, password });
             setMessage(response.data.message);
+            setTimeout(() => {
+                navigate('/login');
+            }, 100);
         } catch (error) {
             setMessage('Error registering user');
             console.error('Error registering user:', error);

@@ -17,23 +17,23 @@ const UrlList = ({ urls: initialUrls, setUrls: parentSetUrls }) => {
     setUrls(initialUrls);
   }, [initialUrls]);
 
-  const deleteUrl = async (ID) => {
-    console.log("Attempting to delete URL with ID:", ID);
+  const deleteUrl = async (id) => {
+    console.log("Attempting to delete URL with id:", id);
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('No token found');
         return;
       }
-      if (!ID) {
+      if (!id) {
         console.error('No ID provided for deletion');
         return;
       }
-      const response = await axios.delete(`http://localhost:8080/del/${ID}`, {
+      const response = await axios.delete(`http://localhost:8080/del/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log("Delete response:", response);
-      const updatedUrls = urls.filter(url => url.ID !== ID);
+      const updatedUrls = urls.filter(url => url.id !== id);
       setUrls(updatedUrls);
       if (parentSetUrls) {
         parentSetUrls(updatedUrls);
@@ -65,7 +65,7 @@ const UrlList = ({ urls: initialUrls, setUrls: parentSetUrls }) => {
         Your Shortened URLs
       </Typography>
       {urls.map((url, index) => (
-        <Box key={url.ID || index} sx={{ mb: 2 }}>
+        <Box key={url.id || index} sx={{ mb: 2 }}>
           <Paper 
             elevation={0}
             sx={{
@@ -126,7 +126,7 @@ const UrlList = ({ urls: initialUrls, setUrls: parentSetUrls }) => {
                 <ContentCopyIcon />
               </IconButton>
               <IconButton 
-                onClick={() => deleteUrl(url.ID)}
+                onClick={() => deleteUrl(url.id)}
                 color="error"
                 size="small"
               >

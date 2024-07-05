@@ -1,14 +1,16 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/teris-io/shortid"
-	"gorm.io/gorm"
-	"log"
 	"net/http"
 	"time"
 	"url-shortener/config"
 	"url-shortener/models"
+
+	"log"
+
+	"github.com/gin-gonic/gin"
+	"github.com/teris-io/shortid"
+	"gorm.io/gorm"
 )
 
 // CreateShortURL godoc

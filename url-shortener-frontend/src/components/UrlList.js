@@ -90,7 +90,8 @@ const UrlList = ({ urls: initialUrls, setUrls: parentSetUrls }) => {
                 sx={{ 
                   mb: 1, 
                   fontSize: '0.9rem', 
-                  color: 'text.secondary' 
+                  color: 'text.secondary',
+                  maxWidth: '1000px', 
                 }}
               >
                 {url.long_url}

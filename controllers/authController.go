@@ -11,7 +11,7 @@ import (
     "github.com/gin-gonic/gin"
 )
 
-var jwtKey = []byte("my_secret_key") // Assurez-vous que c'est la même clé
+var jwtKey = []byte("my_secret_key")
 
 type Claims struct {
     UserID uint `json:"user_id"`
@@ -36,17 +36,13 @@ func Register(c *gin.Context) {
         return
     }
 
-    // Hacher le mot de passe
     hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Error hashing password"})
         return
     }
-    log.Println("Original Password:", user.Password)
-    log.Println("Hashed Password:", string(hashedPassword))
-    user.Password = string(hashedPassword)
 
-    // Créer l'utilisateur
+    user.Password = string(hashedPassword)
     if err := config.DB.Create(&user).Error; err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating user"})
         return
@@ -55,23 +51,25 @@ func Register(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"message": "User registered successfully"})
 }
 
+type loginInput struct {
+    Email    string `json:"email"`
+    Password string `json:"password"`
+}
+
 // Login godoc
 // @Summary User login
 // @Description Logs in a user and returns a JWT token
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param credentials body struct { Email string `json:"email"`; Password string `json:"password"` } true "Login Credentials"
+// @Param credentials body loginInput true "Login Credentials"
 // @Success 200 {object} map[string]interface{} "token: JWT token"
-// @Failure 400 {object} map[string.interface{} "error: error message"
-// @Failure 401 {object} map[string.interface{} "error: Invalid email or password"
-// @Failure 500 {object} map[string.interface{} "error: error message"
+// @Failure 400 {object} map[string]interface{} "error: error message"
+// @Failure 401 {object} map[string]interface{} "error: Invalid email or password"
+// @Failure 500 {object} map[string]interface{} "error: error message"
 // @Router /login [post]
 func Login(c *gin.Context) {
-    var input struct {
-        Email    string `json:"email"`
-        Password string `json:"password"`
-    }
+    var input loginInput
     if err := c.ShouldBindJSON(&input); err != nil {
         log.Println("Error binding JSON:", err)
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -80,7 +78,6 @@ func Login(c *gin.Context) {
 
     log.Println("Login Attempt - Email:", input.Email, "Password:", input.Password)
 
-    // Trouver l'utilisateur
     var user models.User
     if err := config.DB.Where("email = ?", input.Email).First(&user).Error; err != nil {
         log.Println("Invalid email or password:", err)
@@ -88,12 +85,7 @@ func Login(c *gin.Context) {
         return
     }
 
-    log.Println("Stored Hashed Password:", user.Password)
-    log.Println("Input Password Before Comparison:", input.Password)
-
-    // Vérifier le mot de passe
-    err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password))
-    if err != nil {
+    if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
         log.Println("Invalid email or password:", err)
         log.Println("Error Details:", err)
         log.Printf("Stored: %s, Provided: %s", user.Password, input.Password)
@@ -103,7 +95,6 @@ func Login(c *gin.Context) {
 
     log.Println("Password Match Successful")
 
-    // Générer le token JWT
     expirationTime := time.Now().Add(24 * time.Hour)
     claims := &Claims{
         UserID: user.ID,

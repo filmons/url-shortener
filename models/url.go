@@ -1,13 +1,12 @@
-// Description: This file contains the URL model which is used to store the URL data in the database.
 package models
 
-import (
-	"gorm.io/gorm"
-	"time"
-)
+import "time"
 
 type URL struct {
-	gorm.Model
+	ID             uint       `gorm:"primaryKey" json:"id"`
+	CreatedAt      time.Time  `json:"created_at"`
+	UpdatedAt      time.Time  `json:"updated_at"`
+	DeletedAt      *time.Time `json:"deleted_at,omitempty"`
 	LongURL        string     `json:"long_url"`
 	ShortURL       string     `json:"short_url" gorm:"unique"`
 	UserID         uint       `json:"user_id"`

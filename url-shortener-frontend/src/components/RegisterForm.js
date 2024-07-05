@@ -1,41 +1,6 @@
-// import React, { useState } from 'react';
-// import axios from 'axios';
-
-// const RegisterForm = () => {
-//     const [name, setName] = useState('');
-//     const [email, setEmail] = useState('');
-//     const [password, setPassword] = useState('');
-//     const [message, setMessage] = useState('');
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//         try {
-//             const response = await axios.post('http://localhost:8080/register', { name, email, password });
-//             setMessage(response.data.message);
-//         } catch (error) {
-//             setMessage('Error registering user');
-//             console.error('Error registering user:', error);
-//         }
-//     };
-
-//     return (
-//         <div>
-//             <h2>Register</h2>
-//             <form onSubmit={handleSubmit}>
-//                 <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" required />
-//                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
-//                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
-//                 <button type="submit">Register</button>
-//             </form>
-//             {message && <p>{message}</p>}
-//         </div>
-//     );
-// };
-
-// export default RegisterForm;
 import React, { useState } from 'react';
 import axios from 'axios';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { TextField, Button, Box, Typography} from '@mui/material';
 
 const RegisterForm = () => {
     const [name, setName] = useState('');

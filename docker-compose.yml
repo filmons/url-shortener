@@ -22,10 +22,10 @@ services:
   db:
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: url_shortener
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:

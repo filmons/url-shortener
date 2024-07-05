@@ -58,8 +58,20 @@ const App = () => {
                     <Route path="/" element={
                         isLoggedIn ? (
                             <>
-                                <UrlForm onUrlShortened={handleUrlShortened} />
-                                <UrlList urls={urls} />
+                                <div  className='app-container'>
+                                    <div className='url-header'>
+                                        <h1>Url_shortener</h1>
+                                        <p>Transform your lengthy web addresses into concise, manageable links with our quick and efficient URL shortening tool. Shorten links instantly.</p>
+                                    </div>
+                                    <div className='url-form-container'>
+                                        <div className='url-form'>
+                                            <UrlForm onUrlShortened={handleUrlShortened} />
+                                        </div>
+                                    </div>
+                                    <div className='url-list'>
+                                        <UrlList urls={urls} />
+                                    </div>
+                                </div>
                             </>
                         ) : (
                             <Navigate to="/login" />

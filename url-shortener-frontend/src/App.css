@@ -9,28 +9,10 @@ body {
   height: 100vh;
 }
 
-h1 {
-  color: #333;
-}
-
-form {
-  margin-bottom: 20px;
-}
-
 input[type="text"] {
   padding: 10px;
   font-size: 16px;
-  width: 300px;
-  margin-right: 10px;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #5cb85c;
-  color: white;
-  border: none;
-  cursor: pointer;
+  width: 800px;
 }
 
 button:hover {
@@ -48,4 +30,83 @@ li {
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.app-container {
+  height: 100vh;
+  width: 100vw;
+}
+
+.url-form-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100px; 
+  position: relative; 
+  margin-top: -35px;
+  
+}
+.url-list{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.url-form {
+  height: 100px;
+  width: 100%; 
+  max-width: 800px; 
+}
+
+.url-header {
+  width: 100%;
+  height: 210px;
+  background: rgb(146,167,227);
+  background: linear-gradient(90deg, rgba(146,167,227,1) 0%, rgba(234,241,240,1) 49%, rgba(87,176,217,1) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.url-header h1 {
+  margin: 0 0 15px 0;
+  font-size: 28px;
+}
+
+.url-header p {
+  margin: 0;
+  max-width: 600px;
+  font-size: 16px;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.url-header p::after {
+  content: attr(data-content);
+  white-space: pre-wrap;
+  text-align: center;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4cae4c;
 }

@@ -30,6 +30,7 @@ func SetupRouter() *gin.Engine {
 		protected.POST("/shorten", controllers.CreateShortURL)
 		protected.GET("/urls", controllers.GetUserURLs)
 		protected.DELETE("/del/:id", controllers.DeleteURL)
+		protected.GET("/stats/:id", controllers.GetURLStats)
 	}
 
 	return r

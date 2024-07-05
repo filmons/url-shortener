@@ -65,3 +65,14 @@ go get https://github.com/filmons/url-shortener
 ```bash
 ./run.sh
 ```
+or 
+```bash
+bash ./scripts/start.sh
+```
+
+3. Run the frontend
+```bash
+cd url-shortener-frontend
+npm install
+npm start
+```
